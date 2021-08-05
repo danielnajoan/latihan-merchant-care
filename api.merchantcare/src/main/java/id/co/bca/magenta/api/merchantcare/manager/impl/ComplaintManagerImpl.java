@@ -424,6 +424,7 @@ public class ComplaintManagerImpl extends ManagerImpl implements ComplaintManage
 		complaintMain.setRequestID("@tempvarMainID");
 		complaintMain.setComplaintCall_id("@tempvarCallID_id");
 		complaintMain.setCaseCategory_id(view.getCasecategory_id());
+		complaintMain.setJumlahItemKonversi(view.getJumlahItemKonversi());
 		complaintMain.setCreateBy(view.getCreatedby());
 		complaintMain.setCreateTerminal(view.getCreatedterminal());
 		complaintMain.setUpdateBy(view.getCreatedby());

@@ -45,6 +45,7 @@ public class ComplaintMain {
 	private String Image_Path;
 //	private String invoicerequestcount;
 	private String jumlahItem;
+	private String jumlahItemKonversi;
 	private String satuan;
 	private String kcuLokasiUsaha;
 	private String kanwilLokasiUsaha;
@@ -279,6 +280,12 @@ public class ComplaintMain {
 	}
 	public void setJumlahItem(String jumlahItem) {
 		this.jumlahItem = jumlahItem;
+	}
+	public String getJumlahItemKonversi() {
+		return jumlahItemKonversi;
+	}
+	public void setJumlahItemKonversi(String jumlahItemKonversi) {
+		this.jumlahItemKonversi = jumlahItemKonversi;
 	}
 	public String getSatuan() {
 		return satuan;
