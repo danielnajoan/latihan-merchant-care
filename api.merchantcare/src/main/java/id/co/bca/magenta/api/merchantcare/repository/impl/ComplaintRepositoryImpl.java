@@ -59,9 +59,10 @@ public class ComplaintRepositoryImpl extends RepositoryImpl implements Complaint
 	public Map<String, Object> save(long hashing, Map params, String caseCategoryId) {
 		String queryGetCallID = "--GET CALLID" + Criteria.ENTER
 				+ "DECLARE @tempvarCallIDT TABLE (ResultValue varchar(8))" + Criteria.ENTER
-				+ "DECLARE @tempvarCallID varchar(8)" + Criteria.ENTER + "INSERT INTO @tempvarCallIDT(ResultValue)"
-				+ Criteria.ENTER + "exec spGetComplaintCallID" + Criteria.ENTER
-				+ "SET @tempvarCallID=(select * FROM @tempvarCallIDT)";
+				+ "DECLARE @tempvarCallID varchar(10) = 'C' + RIGHT('00000000' + CAST((select case \r\n"
+				+ "	when not exists(select top 1 * from ComplaintCall) then 0\r\n"
+				+ "	when exists (select top 1 * from ComplaintCall) then (select top 1 id from ComplaintCall order by id desc)\r\n"
+				+ "	end ) AS VARCHAR(8)), 8)" + Criteria.ENTER;
 		String queryGetDueDate = "--GET DueDate " + Criteria.ENTER
 				+ "DECLARE @tempvarDueDateT TABLE (ResultValue datetime)" + Criteria.ENTER
 				+ "DECLARE @tempvarDueDate datetime" + Criteria.ENTER + "DECLARE @tempvarSLA int=0" + Criteria.ENTER
@@ -76,9 +77,10 @@ public class ComplaintRepositoryImpl extends RepositoryImpl implements Complaint
 
 		String queryGetMainID = "--GET MAINID" + Criteria.ENTER
 				+ "DECLARE @tempvarMainIDT TABLE (ResultValue varchar(8))" + Criteria.ENTER
-				+ "DECLARE @tempvarMainID varchar(8)" + Criteria.ENTER + "INSERT INTO @tempvarMainIDT(ResultValue)"
-				+ Criteria.ENTER + "exec spGetComplaintMainID" + Criteria.ENTER
-				+ "SET @tempvarMainID=(select * FROM @tempvarMainIDT)";
+				+ "DECLARE @tempvarMainID varchar(10) = 'R' + RIGHT('00000000' + CAST((select case \r\n"
+				+ "	when not exists(select top 1 * from ComplaintMain) then 0\r\n"
+				+ "	when exists (select top 1 * from ComplaintMain) then (select top 1 id from ComplaintCall order by id desc)\r\n"
+				+ "	end ) AS VARCHAR(8)), 8)" + Criteria.ENTER;
 
 		String queryGetMainID_id = "--GET MAINID_id" + Criteria.ENTER + "DECLARE @tempvarMAINID_id int" + Criteria.ENTER
 				+ "SET @tempvarMAINID_id=(select id from ComplaintMAIN where REQUESTID=@tempvarMAINID)";
@@ -109,7 +111,6 @@ public class ComplaintRepositoryImpl extends RepositoryImpl implements Complaint
 							params.get(StaticVariable.COMPLAINT_EDC) + createddate)
 					+ Criteria.SEMICOLON + Criteria.DOUBLEENTER;			
 		}
-
 
 		logger.info("("+hashing+") "+"query: "+query);
 		return insertDataByCallSP(hashing, query);

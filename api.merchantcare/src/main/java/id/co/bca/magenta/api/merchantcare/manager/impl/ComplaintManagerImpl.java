@@ -176,8 +176,7 @@ public class ComplaintManagerImpl extends ManagerImpl implements ComplaintManage
 		try {
 			if (null != view.getProductid()) {
 				//Flow complaint
-				Map<String, Object> rtrn = magentaRepository
-						.callSPGetDataByTerminalInit(hashing, view.getProductid());
+				Map<String, Object> rtrn = magentaRepository.callSPGetDataByTerminalInit(hashing, view.getProductid());
 				List<OutletDevice> outletDevices = (List<OutletDevice>) rtrn.get("O_OUTLET_DEVICE_REC");
 
 				if (null != outletDevices &&  outletDevices.size() > 0) {
@@ -186,23 +185,20 @@ public class ComplaintManagerImpl extends ManagerImpl implements ComplaintManage
 					Map<String, Object> params = new HashMap<String, Object>();
 					params.put("isComplaint", "true");
 					// Generate COMPLAINTCALL's values
-					logger.info("Checkpoint 1");
 					ComplaintCall complaintCall = genComplaintCallV2(hashing, view, rtrn);
-
 					logger.info("{}",complaintCall);
 					params.put(StaticVariable.COMPLAINT_CALL, complaintCall.getQuery());
-					logger.info("Checkpoint 2");
 		
 					// Generate COMPLAINTMAIN's values
 					ComplaintMain complaintMain = genComplaintMainV2(hashing, view, rtrn);
+					logger.info("{}",complaintMain);
 					params.put(StaticVariable.COMPLAINT_MAIN, complaintMain.getQuery());
-					logger.info("Checkpoint 3");
 
 					// Generate COMPLAINTEDC's values
 					ComplaintEDC complaintEDC = genComplaintEDCv2(hashing, view, rtrn);
+					logger.info("{}",complaintEDC);
 					params.put(StaticVariable.COMPLAINT_EDC, complaintEDC.getQuery());
-					logger.info("Checkpoint 4");
-					
+
 					Map<String, Object> result = complaintRepository.save(hashing, params, caseCategoryId);
 
 					List<SpStatusMsg2> rtrnData = (List<SpStatusMsg2>) result.get(StaticVariable.SP_STATUS_MSG);
@@ -261,32 +257,6 @@ public class ComplaintManagerImpl extends ManagerImpl implements ComplaintManage
 				// Generate COMPLAINTEDC's values
 				ComplaintEDC complaintEDC = genComplaintEDCv2(hashing, view, null);
 				params.put(StaticVariable.COMPLAINT_EDC, complaintEDC.getQuery());
-				logger.info("Checkpoint");
-				logger.info("Checkpoint");
-				logger.info("Checkpoint");
-				logger.info("Checkpoint");
-				logger.info("Checkpoint");
-				logger.info("Checkpoint");
-				logger.info("Checkpoint");
-				logger.info("Checkpoint");
-				logger.info("Checkpoint");
-				logger.info("Checkpoint");
-				logger.info("Checkpoint");
-				logger.info("Checkpoint");
-				logger.info("Checkpoint");
-				logger.info("Checkpoint");
-				logger.info("Checkpoint");
-				logger.info("Checkpoint");
-				logger.info("Checkpoint");
-				logger.info("Checkpoint");
-				logger.info("Checkpoint");
-				logger.info("Checkpoint");
-				logger.info("Checkpoint");
-				logger.info("Checkpoint");
-				logger.info("Checkpoint");
-				logger.info("Checkpoint");
-				logger.info("Checkpoint");
-				logger.info("Checkpoint");
 				Map<String, Object> result = complaintRepository.save(hashing, params, caseCategoryId);
 
 				List<SpStatusMsg2> rtrnData = (List<SpStatusMsg2>) result.get(StaticVariable.SP_STATUS_MSG);
