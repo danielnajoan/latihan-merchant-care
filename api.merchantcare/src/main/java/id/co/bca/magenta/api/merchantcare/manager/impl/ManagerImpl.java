@@ -21,7 +21,7 @@ public class ManagerImpl {
 	}
 
 	// 201 Created
-	public ErrorDetail getInfoCreated(String msg) {
+	public ErrorDetail getInfoCreated(Object msg) {
 		ErrorDetail info = new ErrorDetail();
 		info.setStatus(HttpStatus.CREATED.value());
 		info.setMessage(HttpStatus.CREATED.name());

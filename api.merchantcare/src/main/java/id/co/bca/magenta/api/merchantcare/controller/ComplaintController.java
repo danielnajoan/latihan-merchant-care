@@ -18,6 +18,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.TrustStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,9 +39,11 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import id.co.bca.magenta.api.merchantcare.entity.Complaint;
 import id.co.bca.magenta.api.merchantcare.entity.viewmodel.ComplaintCreateViewModel;
 import id.co.bca.magenta.api.merchantcare.entity.viewmodel.ComplaintListViewModel;
 import id.co.bca.magenta.api.merchantcare.entity.viewmodel.ComplaintViewModel;
+import id.co.bca.magenta.api.merchantcare.entity.viewmodel.DetailMessageViewModel;
 import id.co.bca.magenta.api.merchantcare.entity.viewmodel.ManagerViewModel;
 import id.co.bca.magenta.api.merchantcare.entity.viewmodel.MasterViewModel;
 import id.co.bca.magenta.api.merchantcare.hcp.HCP;
@@ -254,9 +257,7 @@ public class ComplaintController {
 			ManagerViewModel<ErrorDetail> mvm = complaintManager.saveToSpV2(hashing, view);
 			ErrorDetail detail = mvm.getContent();
 			result.setContent(detail);
-
 			String errmsg[] = ((String) detail.getDetailmessage()).split(";");
-
 			logger.info("("+hashing+") "+"errmsg : " + Arrays.asList(errmsg));
 			if (errmsg[0].toUpperCase().contains("COMMIT")) {
 				// SIMPAN ke HCP
@@ -393,8 +394,22 @@ public class ComplaintController {
 				result.setContent(detail);
 	
 				String errmsg[] = ((String) detail.getDetailmessage()).split(";");
-	
 				logger.info("("+hashing+") "+"errmsg : " + Arrays.asList(errmsg));
+				
+
+				ManagerViewModel<List<ComplaintViewModel>> mvmCreated = complaintManager.findAll(hashing, 1, 1, "", "requestid desc", "");
+				List<ComplaintViewModel> listData = mvmCreated.getContent();
+				ComplaintViewModel dataInfo =  listData.get(0);
+				DetailMessageViewModel detailMessageVM = new DetailMessageViewModel();
+				detailMessageVM.setCallId(dataInfo.getCallid());
+				detailMessageVM.setRequestId(dataInfo.getRequestid());
+				detailMessageVM.setDueDate(dataInfo.getDuedate());
+				detailMessageVM.setCaseCategoryId(Integer.parseInt(dataInfo.getIdcasecategory()));
+				detailMessageVM.setCaseCategoryName(dataInfo.getCasecategory());
+				detailMessageVM.setProductId(dataInfo.getProductid());
+				detail.setDetailmessage(detailMessageVM);
+				result.setContent(detail);
+				
 				if (errmsg[0].toUpperCase().contains("COMMIT")) {
 					// SIMPAN ke HCP
 					if (null != file && !file.isEmpty()) {

@@ -186,21 +186,17 @@ public class ComplaintManagerImpl extends ManagerImpl implements ComplaintManage
 					params.put("isComplaint", "true");
 					// Generate COMPLAINTCALL's values
 					ComplaintCall complaintCall = genComplaintCallV2(hashing, view, rtrn);
-					logger.info("{}",complaintCall);
 					params.put(StaticVariable.COMPLAINT_CALL, complaintCall.getQuery());
 		
 					// Generate COMPLAINTMAIN's values
 					ComplaintMain complaintMain = genComplaintMainV2(hashing, view, rtrn);
-					logger.info("{}",complaintMain);
 					params.put(StaticVariable.COMPLAINT_MAIN, complaintMain.getQuery());
 
 					// Generate COMPLAINTEDC's values
 					ComplaintEDC complaintEDC = genComplaintEDCv2(hashing, view, rtrn);
-					logger.info("{}",complaintEDC);
 					params.put(StaticVariable.COMPLAINT_EDC, complaintEDC.getQuery());
 
 					Map<String, Object> result = complaintRepository.save(hashing, params, caseCategoryId);
-
 					List<SpStatusMsg2> rtrnData = (List<SpStatusMsg2>) result.get(StaticVariable.SP_STATUS_MSG);
 					
 					if (null != rtrnData && rtrnData.size() > 0) {
@@ -208,11 +204,11 @@ public class ComplaintManagerImpl extends ManagerImpl implements ComplaintManage
 
 						if (detailReturn.getIsSuccess() != 0) {
 							String rtrnMsg = detailReturn.getErrorMessage() + ";" 
-									+ detailReturn.getRowAffected() + " row affected";
-							
-							mvm.setTotalrows(detailReturn.getRowAffected());
-							mvm.setInfo(getInfoCreated(rtrnMsg));
-							mvm.setContent(getInfoCreated(rtrnMsg));
+	                                + detailReturn.getRowAffected() + " row affected";
+	                        
+	                        mvm.setTotalrows(detailReturn.getRowAffected());
+	                        mvm.setInfo(getInfoCreated(rtrnMsg));
+	                        mvm.setContent(getInfoCreated(rtrnMsg));
 						} else {
 							String errMsg = detailReturn.getErrorMessage();
 							logger.warn("("+hashing+") "+errMsg);
@@ -330,9 +326,6 @@ public class ComplaintManagerImpl extends ManagerImpl implements ComplaintManage
 		complaintCall.setMerchantPIC(view.getMerchantpic());
 		complaintCall.setStatus("Open");
 		complaintCall.setContactMethod("EDCCare");
-		logger.info("Checkpoint Method 1");
-		logger.info("{}",complaintCall);
-		logger.debug("{}",complaintCall);
 
 		if(null != outlet) {
 			complaintCall.setAlamatUsaha(outlet.getAddress1());
@@ -398,9 +391,6 @@ public class ComplaintManagerImpl extends ManagerImpl implements ComplaintManage
 		complaintCall.setKodePosSaatIni(view.getKodePosSaatIni());
 		complaintCall.setAgentBankSaatIni(view.getAgentBankSaatIni());
 		complaintCall.setContactMethod(view.getContactMethod());
-		logger.info("Checkpoint Method 2");
-		logger.info("{}",complaintCall);
-		logger.debug("{}",complaintCall);
 		return complaintCall;
 	}
 
@@ -438,10 +428,6 @@ public class ComplaintManagerImpl extends ManagerImpl implements ComplaintManage
 		complaintMain.setSummary(view.getSummary());// sebagai kolom untuk menyimpan
 											// visited
 //		complaintMain.setInvoicerequestcount(view.getInvoicerequestcount());
-
-		logger.info("Checkpoint Method 3");
-		logger.info("{}",complaintMain);
-		logger.debug("{}",complaintMain);
 		// address
 		if(null != outletDevice) {
 			complaintMain.setProductID(outletDevice.getTerminalInit());
@@ -477,11 +463,7 @@ public class ComplaintManagerImpl extends ManagerImpl implements ComplaintManage
 			}
 		}
 		complaintMain.setKanwilLokasiUsaha(view.getKanwilLokasiUsaha());
-		complaintMain.setKcuLokasiUsaha(view.getKcuLokasiUsaha());			
-
-		logger.info("Checkpoint Method 4");
-		logger.info("{}",complaintMain);
-		logger.debug("{}",complaintMain);
+		complaintMain.setKcuLokasiUsaha(view.getKcuLokasiUsaha());
 		return complaintMain;
 	}
 
@@ -514,11 +496,7 @@ public class ComplaintManagerImpl extends ManagerImpl implements ComplaintManage
 //		compalintEDC.setModelID("");
 //		compalintEDC.setModelName("");
 		compalintEDC.setNotes(view.getNotes());
-		compalintEDC.setStatus("Open");			
-
-		logger.info("Checkpoint Method 5");
-		logger.info("{}",compalintEDC);
-		logger.debug("{}",compalintEDC);
+		compalintEDC.setStatus("Open");
 		// rtrn.setVendorMaintenance_id(edc.getStockist_id());
 		if(null != outlet) {
 			compalintEDC.setMerchantID(String.valueOf(outlet.getId()));
@@ -529,10 +507,6 @@ public class ComplaintManagerImpl extends ManagerImpl implements ComplaintManage
 			compalintEDC.setSerialID(outletDevice.getSerialNumber());
 		}
 		
-
-		logger.info("Checkpoint Method 6");
-		logger.info("{}",compalintEDC);
-		logger.debug("{}",compalintEDC);
 		return compalintEDC;
 	}
 
